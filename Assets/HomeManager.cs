@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +12,21 @@ public class HomeManager : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
 
+    [SerializeField] private Button _homeButton;
+    [SerializeField] private Sprite _homeButtonAsset;
+    [SerializeField] private Button _progressionButton;
+    [SerializeField] private Sprite _progressionButtonAsset;
+    [SerializeField] private Button _armoryButton;
+    [SerializeField] private Sprite _armoryButtonAsset;
+    [SerializeField] private Button _storeButton;
+    [SerializeField] private Sprite _storeButtonAsset;
+    [SerializeField] private Button _settingsButton;
+    [SerializeField] private Sprite _settingsButtonAsset;
+
+    private List<Button> _buttonList;
+
+
+    [SerializeField] private MenuWindows _menuWindows;
     private int _currentHomeWindow = 0;
 
     [SerializeField] private TextMeshProUGUI _lvl;
@@ -22,6 +40,14 @@ public class HomeManager : MonoBehaviour
 
     void Start()
     {
+        _homeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.HOME));
+        _progressionButton.onClick.AddListener(() => OnButtonClick(MenuWindows.PROGRESSION));
+        _armoryButton.onClick.AddListener(() => OnButtonClick(MenuWindows.ARMOURY));
+        _storeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.STORE));
+        _settingsButton.onClick.AddListener(() => OnButtonClick(MenuWindows.SETTINGS));
+
+        DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
+
         if (_xpBar != null)
         {
             _xpBar.maxValue = _xp_System._xpForUp;
@@ -38,6 +64,62 @@ public class HomeManager : MonoBehaviour
     {
 
     }
+
+
+    void OnButtonClick(MenuWindows menu)
+    {
+        switch (menu)
+        {
+            case MenuWindows.HOME:
+                DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
+                break;
+            case MenuWindows.PROGRESSION:
+                DisableButtonCurrentMenu(_progressionButton, _homeButtonAsset);
+                break;
+            case MenuWindows.ARMOURY:
+                DisableButtonCurrentMenu(_armoryButton, _homeButtonAsset);
+                break;
+            case MenuWindows.STORE:
+                DisableButtonCurrentMenu(_storeButton, _homeButtonAsset);
+                break;
+            case MenuWindows.SETTINGS:
+                DisableButtonCurrentMenu(_settingsButton, _homeButtonAsset);
+                break;
+        }
+    }
+
+    void DisableButtonCurrentMenu(Button button, Sprite buttonAsset)
+    {
+        EnableButton();
+
+        button.interactable = false;
+        button.image.enabled = true;
+        button.image.sprite = buttonAsset;
+    }
+
+
+    void EnableButton()
+    {
+        _homeButton.interactable = true;
+        _progressionButton.interactable = true;
+        _armoryButton.interactable = true;
+        _storeButton.interactable = true;
+        _settingsButton.interactable = true;
+
+        _homeButton.image.enabled = false;
+        _progressionButton.image.enabled = false;
+        _armoryButton.image.enabled = false;
+        _storeButton.image.enabled = false;
+        _settingsButton.image.enabled = false;
+
+        _homeButton.image.sprite = null;
+        _progressionButton.image.sprite = null;
+        _armoryButton.image.sprite = null;
+        _storeButton.image.sprite = null;
+        _settingsButton.image.sprite = null;
+
+    }
+
 
 
     public void OnDropdownButtonClicked()
@@ -107,17 +189,11 @@ public class HomeManager : MonoBehaviour
 
 
 
-[Serializable]
-public class HomeWindow : MonoBehaviour
+public enum MenuWindows
 {
-
-    public HomeWindowList WindowsList;
-    public enum HomeWindowList
-    {
-        HOME = 0,
-        PROGRESSION = 1,
-        ARMOURY = 2,
-        STORE = 3,
-        SETTINGS = 4,
-    }
+    HOME,
+    PROGRESSION,
+    ARMOURY,
+    STORE,
+    SETTINGS
 }
