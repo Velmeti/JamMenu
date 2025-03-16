@@ -3854,11 +3854,11 @@ MonoBehaviour:
   - _link: 
     _background: {fileID: 0}
     _title: "Un tournoi d'esport remport\xE9 par Poppey"
-    _subtitle: aaa
+    _subtitle: "Et oui un tournoi esport a \xE9t\xE9 gagn\xE9 par un chien"
   - _link: 
     _background: {fileID: 0}
-    _title: ccc
-    _subtitle: aaa
+    _title: La preuve de l'existence de Satan
+    _subtitle: Un certain Aurelien
 --- !u!1 &1732227171
 GameObject:
   m_ObjectHideFlags: 0
