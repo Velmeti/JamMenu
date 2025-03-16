@@ -1,33 +1,57 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Rendering;
+using TMPro;
+using Unity.VisualScripting;
 
 public class NewsCarousel : MonoBehaviour
 {
     public ScrollRect scrollRect;
     public GameObject buttonPrefab;
-    public int numberOfButtons = 5;
-    public float moveDuration = 1f;  // Durée du déplacement en secondes
-    public float moveInterval = 5f;  // Intervalle entre chaque mouvement des boutons
+    public float moveDuration = 1f;
+    public float moveInterval = 5f;
+
+    [SerializeField] private GameObject _titleButtonObj;
+    [SerializeField] private GameObject _subtitleButtonObj;
+
+    [SerializeField] private NewsButtonParameters[] _newsButtonParameters;
 
     private RectTransform content;
     private GameObject[] buttons;
     private Vector2[] startPositions;
     private Vector2[] targetPositions;
 
+    private float totalWidth = 0f;
+    private int currentNews = 0;
+
+    private bool _canStartTimerReactivation = false;
+    private float _timerReactivation = 0f;
+
     void Awake()
     {
-        buttons = new GameObject[numberOfButtons];
+        buttons = new GameObject[_newsButtonParameters.Length];
         content = scrollRect.content;
 
-        startPositions = new Vector2[numberOfButtons];
-        targetPositions = new Vector2[numberOfButtons];
+        startPositions = new Vector2[_newsButtonParameters.Length];
+        targetPositions = new Vector2[_newsButtonParameters.Length];
 
-        float totalWidth = 0f;
+        totalWidth = 0f;
 
-        for (int i = 0; i < numberOfButtons; i++)
+        for (int i = 0; i < _newsButtonParameters.Length; i++)
         {
+            Debug.Log(i);
             buttons[i] = Instantiate(buttonPrefab, scrollRect.gameObject.transform.position, Quaternion.identity, content.transform);
+            buttons[i].name = "Button : " + i;
+            buttons[i].GetComponent<Image>().sprite = _newsButtonParameters[i]._background;
+
+            GameObject childTitleObj = buttons[i].transform.Find("Title")?.gameObject;
+            GameObject childSubTitleObj = buttons[i].transform.Find("Subtitle")?.gameObject;
+
+            TextMeshProUGUI _title = childTitleObj.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI _subtitle = childSubTitleObj.GetComponent<TextMeshProUGUI>();
+            _title.text = _newsButtonParameters[i]._title;
+            _subtitle.text = _newsButtonParameters[i]._subtitle;
 
             RectTransform buttonRect = buttons[i].GetComponent<RectTransform>();
             buttonRect.anchoredPosition = new Vector2(totalWidth, 0);
@@ -36,27 +60,67 @@ public class NewsCarousel : MonoBehaviour
             totalWidth += buttonRect.rect.width;
         }
 
-        // Lancement du décalage des boutons
         StartCoroutine(MoveButtonsPeriodically());
     }
 
-    // Coroutine pour déplacer les boutons toutes les 5 secondes
+
+    private void Update()
+    {
+        if (_canStartTimerReactivation == true)
+        {
+            _timerReactivation += Time.deltaTime;
+            if (_timerReactivation > moveDuration)
+            {
+                _canStartTimerReactivation = false;
+                _timerReactivation = 0;
+                buttons[currentNews - 1].SetActive(true);
+            }
+
+        }
+
+    }
+
+
     IEnumerator MoveButtonsPeriodically()
     {
         while (true)
         {
-            // Préparer la position cible des boutons
+            yield return new WaitForSeconds(moveInterval);
+
+            if (currentNews < buttons.Length)
+            {
+                currentNews++;
+            }
+            else
+            {
+                currentNews = 1;
+            }
+
             PrepareTargetPositions();
 
-            // Déplacement fluide des boutons pendant 1 seconde
             yield return StartCoroutine(MoveButtonsSmoothly());
 
-            // Attente avant de déplacer à nouveau
-            yield return new WaitForSeconds(moveInterval);
+            Debug.Log("Fin du déplacement");
+
+            // Récupération du bouton à déplacer à la fin
+            int buttonToMoveIndex = currentNews - 1;
+            RectTransform buttonToMoveEnd = buttons[buttonToMoveIndex].GetComponent<RectTransform>();
+
+            // Placer immédiatement le bouton à la fin du carrousel
+            buttonToMoveEnd.anchoredPosition = new Vector2(totalWidth, 0);
+
+            // Mise à jour des positions de départ après repositionnement
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                startPositions[i] = buttons[i].GetComponent<RectTransform>().anchoredPosition;
+            }
+
+            // Désactiver temporairement le bouton et planifier sa réactivation
+            buttons[buttonToMoveIndex].SetActive(false);
+            _canStartTimerReactivation = true;
         }
     }
 
-    // Préparer les positions cibles pour chaque bouton
     void PrepareTargetPositions()
     {
         for (int i = 0; i < buttons.Length; i++)
@@ -64,22 +128,9 @@ public class NewsCarousel : MonoBehaviour
             RectTransform buttonRect = buttons[i].GetComponent<RectTransform>();
             targetPositions[i] = new Vector2(buttonRect.anchoredPosition.x - buttonRect.rect.width, 0);
         }
-
-        // Réorganiser les boutons pour que le premier bouton "passe" à la fin
-        GameObject firstButton = buttons[0];
-        for (int i = 0; i < buttons.Length - 1; i++)
-        {
-            buttons[i] = buttons[i + 1];
-        }
-        buttons[buttons.Length - 1] = firstButton;
-
-        // Mettre à jour la position du premier bouton à la fin du carousel
-        RectTransform firstButtonRect = firstButton.GetComponent<RectTransform>();
-        float totalWidth = buttons[buttons.Length - 1].GetComponent<RectTransform>().anchoredPosition.x + firstButtonRect.rect.width;
-        firstButtonRect.anchoredPosition = new Vector2(totalWidth, 0);
     }
 
-    // Déplacer les boutons en utilisant une interpolation fluide (Lerp) pendant 1 seconde
+
     IEnumerator MoveButtonsSmoothly()
     {
         float elapsedTime = 0f;
@@ -96,17 +147,19 @@ public class NewsCarousel : MonoBehaviour
             yield return null;
         }
 
-        // Assurez-vous que la position finale soit correcte (en cas de petites erreurs dues à la précision de Lerp)
         for (int i = 0; i < buttons.Length; i++)
         {
             RectTransform buttonRect = buttons[i].GetComponent<RectTransform>();
             buttonRect.anchoredPosition = targetPositions[i];
         }
 
-        // Après le mouvement, mettre à jour les positions de départ pour le prochain mouvement
+
+
+
         for (int i = 0; i < buttons.Length; i++)
         {
             startPositions[i] = targetPositions[i];
         }
+
     }
 }

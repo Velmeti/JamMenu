@@ -3842,9 +3842,23 @@ MonoBehaviour:
   scrollRect: {fileID: 429716331}
   buttonPrefab: {fileID: 48167320865791515, guid: 574adcac6b23fda40a3ea664b35bb9fb,
     type: 3}
-  numberOfButtons: 5
   moveDuration: 1
   moveInterval: 5
+  _titleButtonObj: {fileID: 0}
+  _subtitleButtonObj: {fileID: 0}
+  _newsButtonParameters:
+  - _link: 
+    _background: {fileID: 0}
+    _title: La mort de FreddyFazbear
+    _subtitle: 'Ses derniers mots : "Pourquoi i lfait tout noir ?"'
+  - _link: 
+    _background: {fileID: 0}
+    _title: "Un tournoi d'esport remport\xE9 par Poppey"
+    _subtitle: aaa
+  - _link: 
+    _background: {fileID: 0}
+    _title: ccc
+    _subtitle: aaa
 --- !u!1 &1732227171
 GameObject:
   m_ObjectHideFlags: 0
