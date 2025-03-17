@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 public class NewsButtonParameters
 {
-    public string _link;
+    public string _url;
     public Sprite _background;
     public string _title;
     public string _subtitle;

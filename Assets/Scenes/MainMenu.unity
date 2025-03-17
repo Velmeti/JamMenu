@@ -3844,21 +3844,19 @@ MonoBehaviour:
     type: 3}
   moveDuration: 1
   moveInterval: 5
-  _titleButtonObj: {fileID: 0}
-  _subtitleButtonObj: {fileID: 0}
   _newsButtonParameters:
-  - _link: 
+  - _url: https://unity.com/fr
     _background: {fileID: 0}
     _title: La mort de FreddyFazbear
     _subtitle: 'Ses derniers mots : "Pourquoi i lfait tout noir ?"'
-  - _link: 
+  - _url: https://chivalry2.com
     _background: {fileID: 0}
-    _title: "Un tournoi d'esport remport\xE9 par Poppey"
+    _title: Poppey win esport tournament
     _subtitle: "Et oui un tournoi esport a \xE9t\xE9 gagn\xE9 par un chien"
-  - _link: 
+  - _url: https://www.youtube.com/?app=desktop&hl=FR
     _background: {fileID: 0}
-    _title: La preuve de l'existence de Satan
-    _subtitle: Un certain Aurelien
+    _title: Aa
+    _subtitle: zdqdqdqd
 --- !u!1 &1732227171
 GameObject:
   m_ObjectHideFlags: 0
