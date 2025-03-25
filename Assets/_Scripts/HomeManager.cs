@@ -117,7 +117,6 @@ public class HomeManager : MonoBehaviour
         _armoryButton.image.sprite = null;
         _storeButton.image.sprite = null;
         _settingsButton.image.sprite = null;
-
     }
 
 

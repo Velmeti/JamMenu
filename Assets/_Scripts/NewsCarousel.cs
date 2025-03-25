@@ -3,12 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Rendering;
 using TMPro;
-using Unity.VisualScripting;
+
 
 public class NewsCarousel : MonoBehaviour
 {
     public ScrollRect scrollRect;
     public GameObject buttonPrefab;
+    public GameObject circlePrefab;
     public float moveDuration = 1f;
     public float moveInterval = 5f;
 
@@ -19,7 +20,15 @@ public class NewsCarousel : MonoBehaviour
     private Vector2[] startPositions;
     private Vector2[] targetPositions;
 
-    private float totalWidth = 0f;
+    private GameObject[] _circles;
+    private Sprite _baseCircleSprite;
+    [SerializeField] private Sprite _selectCircleSprite;
+
+    private float totalWidthButton = 0f;
+    private float totalWidthCircle = 0f;
+    [SerializeField] private float offsetCircleHorizontal = 5f;
+    [SerializeField] private float offsetCircleVertical = 20f;
+
     private int currentNews = 0;
 
     private bool _canStartTimerReactivation = false;
@@ -33,12 +42,14 @@ public class NewsCarousel : MonoBehaviour
         scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
 
         buttons = new GameObject[_newsButtonParameters.Length];
+        _circles = new GameObject[_newsButtonParameters.Length];
         content = scrollRect.content;
+        _baseCircleSprite = circlePrefab.GetComponent<Image>().sprite;
 
         startPositions = new Vector2[_newsButtonParameters.Length];
         targetPositions = new Vector2[_newsButtonParameters.Length];
 
-        totalWidth = 0f;
+        totalWidthButton = 0f;
 
         for (int i = 0; i < _newsButtonParameters.Length; i++)
         {
@@ -53,9 +64,9 @@ public class NewsCarousel : MonoBehaviour
             if (_subtitle != null) _subtitle.text = _newsButtonParameters[i]._subtitle;
 
             RectTransform buttonRect = buttons[i].GetComponent<RectTransform>();
-            buttonRect.anchoredPosition = new Vector2(totalWidth, 0);
+            buttonRect.anchoredPosition = new Vector2(totalWidthButton, 0);
             startPositions[i] = buttonRect.anchoredPosition;
-            totalWidth += buttonRect.rect.width;
+            totalWidthButton += buttonRect.rect.width;
 
             string url = _newsButtonParameters[i]._url;
             Button buttonComponent = buttons[i].GetComponent<Button>();
@@ -64,6 +75,21 @@ public class NewsCarousel : MonoBehaviour
                 buttonComponent.onClick.AddListener(() => OpenWebsite(url));
             }
         }
+
+        for (int y = 0; y < _newsButtonParameters.Length; y++)
+        {
+            _circles[y] = Instantiate(circlePrefab, scrollRect.gameObject.transform.position, Quaternion.identity, content.transform);
+
+            RectTransform circleRect = _circles[y].GetComponent<RectTransform>();
+            TextMeshProUGUI _subtitle = buttons[y].transform.Find("Subtitle")?.GetComponent<TextMeshProUGUI>();
+            Vector2 _subtitlePosition = _subtitle.gameObject.GetComponent<RectTransform>().anchoredPosition;
+            float buttonPrefabWidth = buttonPrefab.GetComponent<RectTransform>().rect.width;
+            float buttonPrefabLeftBorder = buttonPrefabWidth - (buttonPrefabWidth / 2);
+            circleRect.anchoredPosition = new Vector2(_subtitlePosition.x - buttonPrefabLeftBorder + totalWidthCircle, _subtitlePosition.y - offsetCircleVertical);
+            totalWidthCircle += circleRect.rect.width + offsetCircleHorizontal;
+        }
+
+        _circles[0].GetComponent<Image>().sprite = _selectCircleSprite;
 
         StartCoroutine(MoveButtonsPeriodically());
     }
@@ -83,7 +109,6 @@ public class NewsCarousel : MonoBehaviour
             }
 
         }
-
     }
 
 
@@ -91,13 +116,25 @@ public class NewsCarousel : MonoBehaviour
     {
         while (true)
         {
+            if (currentNews > 0 && currentNews < _circles.Length)
+            {
+                Debug.Log(currentNews);
+                _circles[currentNews - 1].GetComponent<Image>().sprite = _baseCircleSprite;
+                _circles[currentNews].GetComponent<Image>().sprite = _selectCircleSprite;
+            }
+            else if (currentNews >= _circles.Length)
+            {
+                _circles[_circles.Length - 1].GetComponent<Image>().sprite = _baseCircleSprite;
+                _circles[0].GetComponent<Image>().sprite = _selectCircleSprite;
+            }
+
             yield return new WaitForSeconds(moveInterval);
 
             if (currentNews < buttons.Length)
             {
                 currentNews++;
             }
-            else
+            else if (currentNews >= buttons.Length)
             {
                 currentNews = 1;
             }
@@ -111,14 +148,13 @@ public class NewsCarousel : MonoBehaviour
             int buttonToMoveIndex = currentNews - 1;
             RectTransform buttonToMoveEnd = buttons[buttonToMoveIndex].GetComponent<RectTransform>();
 
-            buttonToMoveEnd.anchoredPosition = new Vector2(totalWidth - totalWidth / buttons.Length, 0);
+            buttonToMoveEnd.anchoredPosition = new Vector2(totalWidthButton - totalWidthButton / buttons.Length, 0);
 
             for (int i = 0; i < buttons.Length; i++)
             {
                 startPositions[i] = buttons[i].GetComponent<RectTransform>().anchoredPosition;
             }
 
-            // Désactiver temporairement le bouton et planifier sa réactivation
             buttons[buttonToMoveIndex].SetActive(false);
             _canStartTimerReactivation = true;
         }
@@ -136,6 +172,7 @@ public class NewsCarousel : MonoBehaviour
 
     IEnumerator MoveButtonsSmoothly()
     {
+
         float elapsedTime = 0f;
 
         while (elapsedTime < moveDuration)
