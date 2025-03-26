@@ -8,7 +8,6 @@ public class ButtonSoundEffect : MonoBehaviour
     [SerializeField] private Button[] _buttons;
     [SerializeField] AudioSource _SoundButton;
 
-
     void Start()
     {
         for (int i = 0; i < _buttons.Length; i++)
