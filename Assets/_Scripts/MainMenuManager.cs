@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HomeManager : MonoBehaviour
+public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
 

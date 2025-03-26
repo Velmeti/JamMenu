@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class XP_System : MonoBehaviour
 {
-    [SerializeField] private HomeManager _homeManager;
+    [SerializeField] private MainMenuManager _mainMenuManager;
 
     public int _lvl = 1;
     public float _xp = 0;
@@ -35,7 +35,7 @@ public class XP_System : MonoBehaviour
     public void EarnXP(float xp_earned)
     {
         _xp += xp_earned;
-        _homeManager.UpdateXPBar();
+        _mainMenuManager.UpdateXPBar();
     }
 
 
@@ -47,8 +47,8 @@ public class XP_System : MonoBehaviour
             _xp = _xp - _xpForUp;
             CalculateRatio(_lvl);
             CalculateNextLvlXP();
-            _homeManager.UpdateXPBar();
-            _homeManager.UpdateLvl();
+            _mainMenuManager.UpdateXPBar();
+            _mainMenuManager.UpdateLvl();
         }
     }
 
