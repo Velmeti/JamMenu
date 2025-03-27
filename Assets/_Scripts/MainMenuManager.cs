@@ -12,6 +12,7 @@ public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
 
+    /*
     [SerializeField] private Button _homeButton;
     [SerializeField] private Sprite _homeButtonAsset;
     [SerializeField] private Button _progressionButton;
@@ -22,9 +23,11 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Sprite _storeButtonAsset;
     [SerializeField] private Button _settingsButton;
     [SerializeField] private Sprite _settingsButtonAsset;
+    */
 
-    private List<Button> _buttonList;
-
+    [SerializeField] private MenuInfos[] _menus;
+    private MenuInfos _currentMenu;
+    [SerializeField] private Sprite _invisibleSprite;
 
     [SerializeField] private MenuWindows _menuWindows;
     private int _currentHomeWindow = 0;
@@ -40,13 +43,26 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        /*
         _homeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.HOME));
         _progressionButton.onClick.AddListener(() => OnButtonClick(MenuWindows.PROGRESSION));
         _armoryButton.onClick.AddListener(() => OnButtonClick(MenuWindows.ARMOURY));
         _storeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.STORE));
         _settingsButton.onClick.AddListener(() => OnButtonClick(MenuWindows.SETTINGS));
+        */
 
-        DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
+
+        Debug.Log("Menu Lenght : " + _menus.Length);
+        for (int i = 0; i < _menus.Length; i++)
+        {
+            int index = i;
+            Debug.Log("add listener " + index);
+            _menus[index].ThisMenuButton.onClick.AddListener(() => ChangeMenu(index));
+        }
+
+        _currentMenu = _menus[0];
+
+        //DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
 
         if (_xpBar != null)
         {
@@ -66,12 +82,14 @@ public class MainMenuManager : MonoBehaviour
     }
 
 
-    void OnButtonClick(MenuWindows menu)
+    void OnButtonClick(int buttonIndex)
     {
+        //DisableButtonCurrentMenu(_menus[buttonIndex].ThisMenuButton, _menus[buttonIndex].AssetButtonSelected);
+
+        /*
         switch (menu)
         {
             case MenuWindows.HOME:
-                DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
                 break;
             case MenuWindows.PROGRESSION:
                 DisableButtonCurrentMenu(_progressionButton, _homeButtonAsset);
@@ -86,11 +104,41 @@ public class MainMenuManager : MonoBehaviour
                 DisableButtonCurrentMenu(_settingsButton, _homeButtonAsset);
                 break;
         }
+        */
+    }
+
+    void ChangeMenu(int buttonIndex)
+    {
+        DisablePreviousMenu();
+        EnableMenu(buttonIndex);
+    }
+
+
+    void EnableMenu(int buttonIndex)
+    {
+        _menus[buttonIndex].ThisMenuButton.interactable = false;
+        _menus[buttonIndex].ThisMenuButton.image.enabled = true;
+        _menus[buttonIndex].ThisMenuButton.image.sprite = _menus[buttonIndex].AssetButtonSelected;
+
+        _menuWindows = _menus[buttonIndex].WindowType;
+
+        _menus[buttonIndex].ThisMenu.SetActive(true);
+
+        _currentMenu = _menus[buttonIndex];
+    }
+
+
+    void DisablePreviousMenu()
+    {
+        _currentMenu.ThisMenuButton.interactable = true;
+        _currentMenu.ThisMenuButton.image.sprite = _invisibleSprite;
+
+        _currentMenu.ThisMenu.SetActive(false);
     }
 
     void DisableButtonCurrentMenu(Button button, Sprite buttonAsset)
     {
-        EnableButton();
+        //EnableButton();
 
         button.interactable = false;
         button.image.enabled = true;
@@ -98,6 +146,7 @@ public class MainMenuManager : MonoBehaviour
     }
 
 
+    /*
     void EnableButton()
     {
         _homeButton.interactable = true;
@@ -118,7 +167,7 @@ public class MainMenuManager : MonoBehaviour
         _storeButton.image.sprite = null;
         _settingsButton.image.sprite = null;
     }
-
+    */
 
 
     public void OnDropdownButtonClicked()
