@@ -43,14 +43,6 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
-        /*
-        _homeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.HOME));
-        _progressionButton.onClick.AddListener(() => OnButtonClick(MenuWindows.PROGRESSION));
-        _armoryButton.onClick.AddListener(() => OnButtonClick(MenuWindows.ARMOURY));
-        _storeButton.onClick.AddListener(() => OnButtonClick(MenuWindows.STORE));
-        _settingsButton.onClick.AddListener(() => OnButtonClick(MenuWindows.SETTINGS));
-        */
-
 
         Debug.Log("Menu Lenght : " + _menus.Length);
         for (int i = 0; i < _menus.Length; i++)
@@ -61,8 +53,8 @@ public class MainMenuManager : MonoBehaviour
         }
 
         _currentMenu = _menus[0];
+        EnableMenu(0);
 
-        //DisableButtonCurrentMenu(_homeButton, _homeButtonAsset);
 
         if (_xpBar != null)
         {
@@ -76,36 +68,6 @@ public class MainMenuManager : MonoBehaviour
         _dropdownableFrame.SetActive(false);
     }
 
-    void Update()
-    {
-
-    }
-
-
-    void OnButtonClick(int buttonIndex)
-    {
-        //DisableButtonCurrentMenu(_menus[buttonIndex].ThisMenuButton, _menus[buttonIndex].AssetButtonSelected);
-
-        /*
-        switch (menu)
-        {
-            case MenuWindows.HOME:
-                break;
-            case MenuWindows.PROGRESSION:
-                DisableButtonCurrentMenu(_progressionButton, _homeButtonAsset);
-                break;
-            case MenuWindows.ARMOURY:
-                DisableButtonCurrentMenu(_armoryButton, _homeButtonAsset);
-                break;
-            case MenuWindows.STORE:
-                DisableButtonCurrentMenu(_storeButton, _homeButtonAsset);
-                break;
-            case MenuWindows.SETTINGS:
-                DisableButtonCurrentMenu(_settingsButton, _homeButtonAsset);
-                break;
-        }
-        */
-    }
 
     void ChangeMenu(int buttonIndex)
     {
@@ -135,39 +97,6 @@ public class MainMenuManager : MonoBehaviour
 
         _currentMenu.ThisMenu.SetActive(false);
     }
-
-    void DisableButtonCurrentMenu(Button button, Sprite buttonAsset)
-    {
-        //EnableButton();
-
-        button.interactable = false;
-        button.image.enabled = true;
-        button.image.sprite = buttonAsset;
-    }
-
-
-    /*
-    void EnableButton()
-    {
-        _homeButton.interactable = true;
-        _progressionButton.interactable = true;
-        _armoryButton.interactable = true;
-        _storeButton.interactable = true;
-        _settingsButton.interactable = true;
-
-        _homeButton.image.enabled = false;
-        _progressionButton.image.enabled = false;
-        _armoryButton.image.enabled = false;
-        _storeButton.image.enabled = false;
-        _settingsButton.image.enabled = false;
-
-        _homeButton.image.sprite = null;
-        _progressionButton.image.sprite = null;
-        _armoryButton.image.sprite = null;
-        _storeButton.image.sprite = null;
-        _settingsButton.image.sprite = null;
-    }
-    */
 
 
     public void OnDropdownButtonClicked()
