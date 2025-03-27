@@ -58,8 +58,8 @@ public class MainMenuManager : MonoBehaviour
 
         if (_xpBar != null)
         {
-            _xpBar.maxValue = _xp_System._xpForUp;
-            _xpBar.value = _xp_System._xp;
+            _xpBar.maxValue = _xp_System.XpForUp;
+            _xpBar.value = _xp_System.Xp;
         }
 
         UpdateXPBar();
@@ -117,7 +117,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void UpdateXPBar()
     {
-        if (_xp_System._xp < _xp_System._xpForUp / 100)
+        if (_xp_System.Xp < _xp_System.XpForUp / 100)
         {
             _xpFillBar.enabled = false;
         }
@@ -128,8 +128,8 @@ public class MainMenuManager : MonoBehaviour
 
         if (_xpBar != null)
         {
-            _xpBar.maxValue = _xp_System._xpForUp;
-            AnimateXPBar(_xp_System._xp);
+            _xpBar.maxValue = _xp_System.XpForUp;
+            AnimateXPBar(_xp_System.Xp);
         }
     }
 
@@ -160,7 +160,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void UpdateLvl()
     {
-        _lvl.text = _xp_System._lvl.ToString();
+        _lvl.text = _xp_System.Lvl.ToString();
     }
 }
 

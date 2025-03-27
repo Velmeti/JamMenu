@@ -6750,6 +6750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47232aedb1f54444bbd22c1d63329e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _xp_System: {fileID: 1728183660}
 --- !u!1001 &1015496406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11388,17 +11389,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainMenuManager: {fileID: 1728183663}
-  _lvl: 1
-  _xp: 0
+  _savePlayer: {fileID: 1010382329}
+  Lvl: 1
+  Xp: 0
   _xpCurveStages:
-  - _lvlStage: 10
+  - _lvlStage: 1
     _xpForUp_ratio: 1.05
-  - _lvlStage: 20
+  - _lvlStage: 10
     _xpForUp_ratio: 1.1
-  - _lvlStage: 30
+  - _lvlStage: 20
     _xpForUp_ratio: 1.2
-  _lvl1_xpForUp: 100
-  _xpForUp: 0
+  - _lvlStage: 30
+    _xpForUp_ratio: 1.4
+  Lvl1_xpForUp: 100
+  XpForUp: 100
+  _currentRatio: 0
 --- !u!114 &1728183661
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class SavePlayer : MonoBehaviour
 {
+    [SerializeField] private XP_System _xp_System;
+
     private string _playerNameKey = "playerName";
     private string _imageSaveKey = "playerImage";
+    private string _playerLvlKey = "playerLevel";
+    private string _playerXplKey = "playerXp";
+    private string _playerXpForUplKey = "playerXpForUp";
 
 
-    public void SaveGame(string playerName, Texture2D profileImage)
+    public void SaveGame(string playerName, Texture2D profileImage, int playerLvl, float playerXp, float playerXpForUp)
     {
         SavePlayerName(playerName);
         SaveProfilImage(profileImage);
-
+        SavePlayerXPSystem(playerLvl, playerXp, playerXpForUp);
         PlayerPrefs.Save();
 
 
@@ -37,11 +42,24 @@ public class SavePlayer : MonoBehaviour
         Debug.Log("Profil Image saved");
     }
 
+    public void SavePlayerXPSystem(int playerLvl, float playerXp, float playerXpForUp)
+    {
+        PlayerPrefs.SetInt(_playerLvlKey, playerLvl);
+        Debug.Log("Player Lvl saved : " + playerLvl);
+
+        PlayerPrefs.SetFloat(_playerXplKey, playerXp);
+        Debug.Log("Player Xp saved : " + playerXp);
+
+        PlayerPrefs.SetFloat(_playerXpForUplKey, playerXpForUp);
+        Debug.Log("Player Xp for up saved : " + playerXpForUp);
+    }
+
 
     public string GetPlayerName()
     {
         return PlayerPrefs.GetString(_playerNameKey, "Unknown");
     }
+
 
     public Texture2D GetProfilImage()
     {
@@ -57,5 +75,23 @@ public class SavePlayer : MonoBehaviour
             }
         }
         return null;
+    }
+
+
+    public int GetPlayerLvl()
+    {
+        return PlayerPrefs.GetInt(_playerLvlKey, 1);
+    }
+
+
+    public float GetPlayerXp()
+    {
+        return PlayerPrefs.GetFloat(_playerXplKey, 0);
+    }
+
+
+    public float GetPlayerXpForUp()
+    {
+        return PlayerPrefs.GetFloat(_playerXpForUplKey, _xp_System.Lvl1_xpForUp);
     }
 }

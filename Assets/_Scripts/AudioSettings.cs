@@ -21,7 +21,7 @@ public class AudioSettings : MonoBehaviour
 
 
     private void LoadAudioSettings()
-    {
+    {        
         float generalVolume = _saveSettings.GetGeneralVolume();
         float musicVolume = _saveSettings.GetMusicVolume();
         float UIVolume = _saveSettings.GetUIVolume();

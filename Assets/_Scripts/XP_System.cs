@@ -6,46 +6,74 @@ using UnityEngine;
 public class XP_System : MonoBehaviour
 {
     [SerializeField] private MainMenuManager _mainMenuManager;
+    [SerializeField] private SavePlayer _savePlayer;
 
-    public int _lvl = 1;
-    public float _xp = 0;
+    public int Lvl = 1;
+    public float Xp = 0;
     [SerializeField] private XP_Curve[] _xpCurveStages;
 
 
-    [SerializeField] private float _lvl1_xpForUp = 100;
-    public float _xpForUp = 0;
-    private float _currentRatio;
+    public float Lvl1_xpForUp = 100;
+    [HideInInspector] public float XpForUp;
+    public float _currentRatio;
 
 
 
     void Start()
     {
-        _xpForUp = _lvl1_xpForUp;
-        _currentRatio = _xpCurveStages[0]._xpForUp_ratio;
-        InitXp();
+        LoadXpDatas();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         LevelUp();
     }
 
 
+
+    private void LoadXpDatas()
+    {
+        int lvl = _savePlayer.GetPlayerLvl();
+        float xp = _savePlayer.GetPlayerXp();
+        float xpForUp = _savePlayer.GetPlayerXpForUp();
+
+        Lvl = lvl;
+
+        if (lvl <= 1)
+        {
+            XpForUp = Lvl1_xpForUp;
+        }
+        else
+        {
+            XpForUp = xpForUp;
+        }
+
+        Xp = xp;
+
+        CalculateRatio(lvl);
+
+    }
+
+
+
+
     public void EarnXP(float xp_earned)
     {
-        _xp += xp_earned;
+        Xp += xp_earned;
         _mainMenuManager.UpdateXPBar();
+
+        _savePlayer.SavePlayerXPSystem(Lvl, Xp, XpForUp); 
     }
 
 
     void LevelUp()
     {
-        if (_xp >= _xpForUp)
+        if (Xp >= XpForUp)
         {
-            _lvl++;
-            _xp = _xp - _xpForUp;
-            CalculateRatio(_lvl);
+            Lvl++;
+            Xp = Xp - XpForUp;
+            CalculateRatio(Lvl);
             CalculateNextLvlXP();
             _mainMenuManager.UpdateXPBar();
             _mainMenuManager.UpdateLvl();
@@ -66,16 +94,7 @@ public class XP_System : MonoBehaviour
 
     void CalculateNextLvlXP()
     {
-        _xpForUp = _xpForUp * _currentRatio;
-    }
-
-    void InitXp()
-    {
-        for (int i = 1; i < _lvl; i++)
-        {
-            Debug.Log(i);
-            CalculateNextLvlXP();
-        }
+        XpForUp = XpForUp * _currentRatio;
     }
 }
 
