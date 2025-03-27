@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class XP_System : MonoBehaviour
 {
     [SerializeField] private MainMenuManager _mainMenuManager;
     [SerializeField] private SavePlayer _savePlayer;
+    [SerializeField] private XPBorderRewardSystem _borderRewardSystem;
 
     public int Lvl = 1;
     public float Xp = 0;
@@ -17,7 +19,7 @@ public class XP_System : MonoBehaviour
     [HideInInspector] public float XpForUp;
     public float _currentRatio;
 
-
+    [SerializeField] private TextMeshProUGUI _xpText;
 
     void Start()
     {
@@ -51,6 +53,8 @@ public class XP_System : MonoBehaviour
 
         Xp = xp;
 
+        _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
+
         CalculateRatio(lvl);
 
     }
@@ -63,7 +67,9 @@ public class XP_System : MonoBehaviour
         Xp += xp_earned;
         _mainMenuManager.UpdateXPBar();
 
-        _savePlayer.SavePlayerXPSystem(Lvl, Xp, XpForUp); 
+        _savePlayer.SavePlayerXPSystem(Lvl, Xp, XpForUp);
+
+        _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
     }
 
 
@@ -77,6 +83,10 @@ public class XP_System : MonoBehaviour
             CalculateNextLvlXP();
             _mainMenuManager.UpdateXPBar();
             _mainMenuManager.UpdateLvl();
+
+            _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
+
+            _borderRewardSystem.ChangeBorder(Lvl);
         }
     }
 
