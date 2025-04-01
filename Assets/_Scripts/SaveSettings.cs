@@ -33,7 +33,7 @@ public class SaveSettings : MonoBehaviour
     public void LoadGame()
     {
         float generalVolume = PlayerPrefs.GetFloat("generalVolume", 1.0f);
-        float musicVolume = PlayerPrefs.GetFloat("musicVolume", 1.0f);
+        float musicVolume = PlayerPrefs.GetFloat("musicVolume", 0.25f);
         float UIVolume = PlayerPrefs.GetFloat("UIVolume", 1.0f);
     }
 

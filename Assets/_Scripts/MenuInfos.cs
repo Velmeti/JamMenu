@@ -10,6 +10,6 @@ public class MenuInfos
 {
     public Button ThisMenuButton;
     public Sprite AssetButtonSelected;
-    public MenuWindows WindowType;
+    //public MenuWindows WindowType;
     public GameObject ThisMenu;
 }

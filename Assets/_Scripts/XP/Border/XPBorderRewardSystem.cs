@@ -12,7 +12,6 @@ public class XPBorderRewardSystem : MonoBehaviour
     {
         for (int i = 0; i < borders.Length; i++)
         {
-            Debug.Log("testttt");
             if (borders[i].SpriteBorder != null && lvl == borders[i].LevelToUnloack)
             {
                 borderImage.sprite = borders[i].SpriteBorder;
