@@ -19,11 +19,11 @@ public class XP_System : MonoBehaviour
     [HideInInspector] public float XpForUp;
     public float _currentRatio;
 
-    [SerializeField] private TextMeshProUGUI _xpText;
 
-    void Start()
+    void Awake()
     {
         LoadXpDatas();
+        _xpUI.InitXP_UI();
     }
 
 
@@ -53,7 +53,7 @@ public class XP_System : MonoBehaviour
 
         Xp = xp;
 
-        _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
+        _xpUI.XpText.text = XpForUp - Xp + " XP TO LEVEL UP";
 
         CalculateRatio(lvl);
 
@@ -69,7 +69,7 @@ public class XP_System : MonoBehaviour
 
         _savePlayer.SavePlayerXPSystem(Lvl, Xp, XpForUp);
 
-        _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
+        _xpUI.XpText.text = XpForUp - Xp + " XP TO LEVEL UP";
     }
 
 
@@ -84,7 +84,7 @@ public class XP_System : MonoBehaviour
             _xpUI.UpdateXPBar();
             _xpUI.UpdateLvl();
 
-            _xpText.text = XpForUp - Xp + " XP TO LEVEL UP";
+            _xpUI.XpText.text = XpForUp - Xp + " XP TO LEVEL UP";
 
             _borderRewardSystem.ChangeBorder(Lvl);
         }

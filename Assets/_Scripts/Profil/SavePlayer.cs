@@ -8,7 +8,7 @@ public class SavePlayer : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
 
-    public Button SaveButton;
+    public Button[] SaveButtons;
 
     private string _playerNameKey = "playerName";
     private string _imageSaveKey = "playerImage";

@@ -8,6 +8,7 @@ public class XP_UI : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
 
+    public TextMeshProUGUI XpText;
     [SerializeField] private TextMeshProUGUI _txt_lvl;
     [SerializeField] private Slider _xpBar;
     [SerializeField] private Image _xpFillBar;
@@ -15,7 +16,7 @@ public class XP_UI : MonoBehaviour
     private Coroutine _xpBarCoroutine;
 
 
-    void Start()
+    public void InitXP_UI()
     {
         if (_xpBar != null)
         {

@@ -7,23 +7,31 @@ using UnityEngine.UI;
 public class PlayerName : MonoBehaviour
 {
     [SerializeField] private SavePlayer _savePlayer;
-
-    [SerializeField] private TMP_InputField _playerNameInput;
+    [SerializeField] private TMP_InputField[] _playerNameInput;
     [SerializeField] private TextMeshProUGUI _playerNameText;
-
 
     void Start()
     {
         string savedName = _savePlayer.GetPlayerName();
         _playerNameText.text = savedName;
-        _playerNameInput.text = savedName;
 
-        _savePlayer.SaveButton.onClick.AddListener(SavePlayerName);
+        for (int i = 0; i < _playerNameInput.Length; i++)
+        {
+            _playerNameInput[i].text = savedName;
+        }
+
+        for (int y = 0; y < _savePlayer.SaveButtons.Length; y++)
+        {
+            int index = y;
+            _savePlayer.SaveButtons[y].onClick.AddListener(() => SavePlayerName(index));
+        }
     }
 
-    void SavePlayerName()
+    void SavePlayerName(int index)
     {
-        string playerName = _playerNameInput.text;
+        if (index < 0 || index >= _playerNameInput.Length) return;
+
+        string playerName = _playerNameInput[index].text;
         _savePlayer.SavePlayerName(playerName);
         _playerNameText.text = playerName;
     }
