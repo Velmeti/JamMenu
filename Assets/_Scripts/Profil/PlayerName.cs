@@ -4,6 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Change and load player name UI
+/// </summary>
 public class PlayerName : MonoBehaviour
 {
     [SerializeField] private SavePlayer _savePlayer;
@@ -34,5 +37,11 @@ public class PlayerName : MonoBehaviour
         string playerName = _playerNameInput[index].text;
         _savePlayer.SavePlayerName(playerName);
         _playerNameText.text = playerName;
+
+        for (int i = 0; i < _playerNameInput.Length; i++)
+        {
+            _playerNameInput[i].text = playerName;
+        }
     }
+
 }

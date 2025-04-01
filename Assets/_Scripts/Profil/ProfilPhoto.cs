@@ -7,6 +7,9 @@ using System.IO;
 using UnityEngine.EventSystems;
 using System;
 
+/// <summary>
+/// Change and load player name Photo
+/// </summary>
 public class ProfilPhoto : MonoBehaviour
 {
     [SerializeField] private SavePlayer _savePlayer;
@@ -39,8 +42,8 @@ public class ProfilPhoto : MonoBehaviour
 
     void OpenFileExplorer(int index)
     {
-        _currentOpenFileButton = _openFileButtons[index]; // Store the clicked button
-        _currentPreviewProfileImage = _previewProfileImages[index]; // Store corresponding image preview
+        _currentOpenFileButton = _openFileButtons[index];
+        _currentPreviewProfileImage = _previewProfileImages[index];
 
         var extensions = new[] { new ExtensionFilter("Images", "png", "jpg", "jpeg") };
         string[] paths = StandaloneFileBrowser.OpenFilePanel("Sélectionnez une image", "", extensions, false);
@@ -72,8 +75,14 @@ public class ProfilPhoto : MonoBehaviour
         {
             _profileImage.texture = savedTexture;
             _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
+
+            for (int i = 0; i < _previewProfileImages.Length; i++)
+            {
+                _previewProfileImages[i].texture = savedTexture;
+            }
         }
     }
+
 
     void SaveImage()
     {
@@ -83,6 +92,12 @@ public class ProfilPhoto : MonoBehaviour
             _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
 
             _savePlayer.SaveProfilImage(_tempLoadedTexture);
+
+            for (int i = 0; i < _previewProfileImages.Length; i++)
+            {
+                _previewProfileImages[i].texture = _tempLoadedTexture;
+            }
+
             _tempLoadedTexture = null;
         }
         else
@@ -96,8 +111,14 @@ public class ProfilPhoto : MonoBehaviour
                     _profileImage.texture = _previewProfileImages[index].texture;
                     _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
                     _savePlayer.SaveProfilImage((Texture2D)_profileImage.texture);
+
+                    for (int i = 0; i < _previewProfileImages.Length; i++)
+                    {
+                        _previewProfileImages[i].texture = _previewProfileImages[index].texture;
+                    }
                 }
             }
         }
     }
+
 }
