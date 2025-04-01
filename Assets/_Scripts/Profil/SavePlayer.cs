@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class SavePlayer : MonoBehaviour
 {
     [SerializeField] private XP_System _xp_System;
+
+    public Button SaveButton;
 
     private string _playerNameKey = "playerName";
     private string _imageSaveKey = "playerImage";

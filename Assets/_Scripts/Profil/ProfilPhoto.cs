@@ -11,17 +11,16 @@ public class ProfilPhoto : MonoBehaviour
     [SerializeField] private RawImage _profileImage;
     [SerializeField] private Button _openFileButton;
 
+    [SerializeField] private RawImage _previewProfileImage;
+
+    private Texture2D _tempLoadedTexture = null;
 
     void Start()
     {
         _openFileButton.onClick.AddListener(OpenFileExplorer);
+        _savePlayer.SaveButton.onClick.AddListener(SaveImage);
 
-        Texture2D savedTexture = FindObjectOfType<SavePlayer>().GetProfilImage();
-        if (savedTexture != null)
-        {
-            _profileImage.texture = savedTexture;
-            _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
-        }
+        LoadSavedImage();
     }
 
     void OpenFileExplorer()
@@ -31,21 +30,47 @@ public class ProfilPhoto : MonoBehaviour
 
         if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
         {
-            StartCoroutine(LoadAndSaveImage(paths[0]));
+            StartCoroutine(TempLoadImage(paths[0]));
         }
     }
 
-    System.Collections.IEnumerator LoadAndSaveImage(string filePath)
+    IEnumerator TempLoadImage(string filePath)
     {
         byte[] fileData = File.ReadAllBytes(filePath);
         Texture2D texture = new Texture2D(2, 2);
         if (texture.LoadImage(fileData))
         {
-            _profileImage.texture = texture;
-            _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
-
-            FindObjectOfType<SavePlayer>().SaveProfilImage(texture);
+            _tempLoadedTexture = texture;
+            _previewProfileImage.texture = _tempLoadedTexture;
         }
         yield return null;
+    }
+
+    void LoadSavedImage()
+    {
+        Texture2D savedTexture = _savePlayer.GetProfilImage();
+        if (savedTexture != null)
+        {
+            _profileImage.texture = savedTexture;
+            _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
+        }
+    }
+
+    void SaveImage()
+    {
+        if (_tempLoadedTexture != null)
+        {
+            _profileImage.texture = _tempLoadedTexture;
+            _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
+
+            _savePlayer.SaveProfilImage(_tempLoadedTexture);
+            _tempLoadedTexture = null;
+        }
+        else
+        {
+            _profileImage.texture = _previewProfileImage.texture;
+            _profileImage.rectTransform.sizeDelta = new Vector2(100, 100);
+            _savePlayer.SaveProfilImage((Texture2D)_profileImage.texture);
+        }
     }
 }

@@ -9,7 +9,6 @@ public class PlayerName : MonoBehaviour
     [SerializeField] private SavePlayer _savePlayer;
 
     [SerializeField] private TMP_InputField _playerNameInput;
-    [SerializeField] private Button _saveButton;
     [SerializeField] private TextMeshProUGUI _playerNameText;
 
 
@@ -19,7 +18,7 @@ public class PlayerName : MonoBehaviour
         _playerNameText.text = savedName;
         _playerNameInput.text = savedName;
 
-        _saveButton.onClick.AddListener(SavePlayerName);
+        _savePlayer.SaveButton.onClick.AddListener(SavePlayerName);
     }
 
     void SavePlayerName()
